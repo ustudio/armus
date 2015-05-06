@@ -3,7 +3,7 @@
 import logging
 import optparse
 import os
-from odo.utils import date
+from datetime import datetime
 
 DEFAULT_MIGRATION_PATH = "migrations"
 
@@ -66,7 +66,7 @@ def main():
 
 def _generate_migration(path, description, logger):
 
-    version = date.make_timestamp()
+    version = datetime.today().strftime("%Y%m%d%H%M%S")
     base_name = "_{0}_{1}".format(version, description.lower())
     name = "{0}/{1}.py".format(path, base_name)
     test_path = os.path.abspath(os.path.join(path, '..', 'tests'))
