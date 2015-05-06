@@ -9,6 +9,7 @@ def extract_version(name):
     try:
         version = int(name.split("_")[1])
         return version
+    #TODO make this more accurate
     except ValueError:
         return None
 
