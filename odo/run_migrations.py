@@ -49,8 +49,7 @@ def find_unapplied_migrations(path, applied_versions):
 
 def import_module(path, module_name):
     package_name = os.path.basename(path)
-    # module = importlib.import_module(package_name + "." + module_name)
-    module = importlib.import_module("os")
+    module = importlib.import_module(package_name + "." + module_name)
     return module
 
 
