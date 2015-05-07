@@ -5,7 +5,7 @@ import sys
 import importlib
 from mock import patch, MagicMock
 
-from odo.run_migrations import extract_version, get_migration_versions, build_module_names, find_unapplied_migrations, import_module, run_migrations
+from odo.run_migrations import extract_version, get_migration_versions, build_module_names, find_unapplied_migrations, import_module, run_migrations, apply_new_migrations
 
 
 class TestModule():
@@ -114,6 +114,20 @@ class TestCreateMigrationFiles(unittest.TestCase):
                 self.assertEqual(2, mockupmethod.call_count)
                 mockupmethod.reset_mock()
 
-        def test_apply_new_migrations(self):
+        def test_apply_new_migrations(self, run_migrations):
+            # this list comes from the database
+            applied_migrations = []
+            test_directory_listing = [
+                "migration_20121016182212_second_thing.py",
+                "migration_20121016152357_first_thing.py",
+                "im_not_a_migration_file.py"
+            ]
 
-
+            with patch('os.listdir', MagicMock(spec=os.listdir)) as mocklistdir:
+                # with patch('run_migrations', MagicMock(spec=run_migrations)) as mockrunmigrations:
+                mocklistdir.return_value = test_directory_listing
+                apply_new_migrations("some_path", applied_migrations)
+                run_migrations.assert_called_with([
+                    "migration_20121016182212_second_thing",
+                    "migration_20121016152357_first_thing"
+                ])

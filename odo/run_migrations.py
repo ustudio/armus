@@ -58,5 +58,6 @@ def run_migrations(migrations):
         migration.up()
 
 
-def test_apply_new_migrations():
-    pass
+def apply_new_migrations(path, applied_migrations):
+    new_migrations = find_unapplied_migrations(path, applied_migrations)
+    run_migrations(new_migrations)
