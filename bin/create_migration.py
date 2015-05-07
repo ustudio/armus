@@ -6,7 +6,7 @@ import os
 from datetime import datetime
 
 DEFAULT_MIGRATION_PATH = "migrations"
-
+VERSION_FORMAT = "%Y%m%d%H%M%S"
 MIGRATION_TEMPLATE = """
 from odo.migrations import migrations
 
@@ -67,10 +67,10 @@ def main():
 def _generate_migration(path, description, logger):
 
     version = datetime.today().strftime("%Y%m%d%H%M%S")
-    base_name = "_{0}_{1}".format(version, description.lower())
+    base_name = "migration_{0}_{1}".format(version, description.lower())
     name = "{0}/{1}.py".format(path, base_name)
     test_path = os.path.abspath(os.path.join(path, '..', 'tests'))
-    test_name = "{0}/migrations/test{1}.py".format(test_path, base_name)
+    test_name = "{0}/migrations/test_{1}.py".format(test_path, base_name)
 
     logger.info("Generating new migration file ({0}).".format(name))
 
