@@ -2,73 +2,42 @@ import os
 import re
 import importlib
 
-migration_filter = re.compile('migration_[0-9]{14}.*')
+
+migration_filter = re.compile(r"^migration_\d+.*\.py$")
 
 
-class DuplicateMigrationVersion(Exception):
-    pass
+def _get_migration_versions(path):
+    migration_files = [
+        filename for filename in os.listdir(path) if migration_filter.match(filename)
+    ]
+    return sorted(migration_files)
 
 
-def extract_version(name):
-    try:
-        version = int(name.split("_")[1])
-        return version
-    # TODO make this more accurate
-    except ValueError:
-        return None
-
-
-def get_migration_versions(path):
-    versions = []
-    migration_files = [filename for filename in os.listdir(path) if migration_filter.match(filename)]
-
-    for migration_file in migration_files:
-        version = extract_version(migration_file)
-        if version in versions:
-            message = "Duplicate migration version in migration file list"
-            raise DuplicateMigrationVersion(message)
-        else:
-            versions.append(version)
-
-    return sorted(versions)
-
-
-def build_module_names(path, versions):
-    migration_files = [filename for filename in os.listdir(path) if migration_filter.match(filename)]
-
-    module_names = []
-    for filename in migration_files:
-        version = extract_version(filename)
-        if version and version in versions:
-            module_names.append(os.path.splitext(filename)[0])
-
-    return sorted(module_names, key=str.lower)
-
-
-def find_unapplied_migrations(path, applied_versions):
-    all_migration_versions = get_migration_versions(path)
-    new_migration_versions = [
-        version for version in all_migration_versions if version not in applied_versions
+def _find_unapplied_migrations(path, applied_migrations):
+    all_migrations = _get_migration_versions(path)
+    new_migrations = [
+        os.path.splitext(migration)[0] for migration in all_migrations if migration not in applied_migrations
     ]
 
-    migration_module_names = build_module_names(path, new_migration_versions)
-
-    return migration_module_names
+    return new_migrations
 
 
-def import_module(path, module_name):
+def _import_module(path, module_name):
     package_name = os.path.basename(path)
     module = importlib.import_module(package_name + "." + module_name)
     return module
 
 
-def run_migrations(migrations):
+def _run_migrations(path, migrations):
     for migration in migrations:
-        migration.up()
+        module = _import_module(path, migration)
+        module.up()
 
 # TODO revert_last_migration
 
 
 def apply_new_migrations(path, applied_migrations):
-    new_migrations = find_unapplied_migrations(path, applied_migrations)
-    run_migrations(new_migrations)
+    new_migrations = _find_unapplied_migrations(path, applied_migrations)
+    _run_migrations(path, new_migrations)
+    return new_migrations
+
