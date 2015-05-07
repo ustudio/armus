@@ -1,10 +1,12 @@
 import os
 import re
 import importlib
-# from migrations import _20120111152357_fake_migration
-
 
 migration_filter = re.compile('migration_[0-9]{14}.*')
+
+
+class DuplicateMigrationVersion(Exception):
+    pass
 
 
 def extract_version(name):
@@ -17,9 +19,16 @@ def extract_version(name):
 
 
 def get_migration_versions(path):
-    # TODO ABEND on duplicate versions
+    versions = []
     migration_files = [filename for filename in os.listdir(path) if migration_filter.match(filename)]
-    versions = [extract_version(filename) for filename in migration_files]
+
+    for migration_file in migration_files:
+        version = extract_version(migration_file)
+        if version in versions:
+            message = "Duplicate migration version in migration file list"
+            raise DuplicateMigrationVersion(message)
+        else:
+            versions.append(version)
 
     return sorted(versions)
 

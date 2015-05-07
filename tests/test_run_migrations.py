@@ -1,11 +1,11 @@
 import unittest
 import os
-import sys
-import importlib
 
 from mock import patch, MagicMock
 
-from odo.run_migrations import extract_version, get_migration_versions, build_module_names, find_unapplied_migrations, import_module, run_migrations, apply_new_migrations
+from odo.run_migrations import DuplicateMigrationVersion
+from odo.run_migrations import extract_version, get_migration_versions, build_module_names, find_unapplied_migrations, \
+    run_migrations, apply_new_migrations
 
 
 class TestCreateMigrationFiles(unittest.TestCase):
@@ -29,6 +29,19 @@ class TestCreateMigrationFiles(unittest.TestCase):
                 result = get_migration_versions("some_path")
 
             self.assertEqual([20121016152357, 20121016182212], result)
+
+        def test_get_migration_versions_disallows_duplicates(self):
+            test_directory_listing = [
+                "migration_20121016152357_first_thing.py",
+                "migration_20121016182212_second_thing.py",
+                "migration_20121016182212_other_second_thing.py",
+                "im_not_a_migration_file.py"
+            ]
+
+            with patch('os.listdir', MagicMock(spec=os.listdir)) as mocklistdir:
+                mocklistdir.return_value = test_directory_listing
+                with self.assertRaises(DuplicateMigrationVersion):
+                    get_migration_versions("some_path")
 
         def test_build_module_names(self):
             test_directory_listing = [
