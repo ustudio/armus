@@ -66,6 +66,8 @@ def run_migrations(migrations):
     for migration in migrations:
         migration.up()
 
+# TODO revert_last_migration
+
 
 def apply_new_migrations(path, applied_migrations):
     new_migrations = find_unapplied_migrations(path, applied_migrations)
