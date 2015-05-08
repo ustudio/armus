@@ -1,12 +1,15 @@
 Standalone Migration Tool a.k.a. "Odo"
 =================
 
-<img src="http://ds9.trekcore.com/gallery/albums/publicityphotos/odo/9O_2pub.jpg"
+<img src="http://ds9.trekcore.com/gallery/albums/publicityphotos/odo/9O_2pub.jpg" width="200"
  alt="Odo logo" title="Odo" align="right" />
 
 ### What is Odo?
 
 Odo will be an open source tool for running migration scripts.  It was developed in an effort to simplify database migrations at [uStudio](http://www.ustudio.com).
+
+
+
 
 ## Usage
 
