@@ -1,7 +1,7 @@
 Standalone Migration Tool a.k.a. "Odo"
 =================
 
-<img src="http://ds9.trekcore.com/gallery/albums/publicityphotos/odo/9O_2pub.jpg" width="200"
+<img src="http://ds9.trekcore.com/gallery/albums/publicityphotos/odo/9O_2pub.jpg" width="150"
  alt="Odo logo" title="Odo" align="right" />
 
 ### What is Odo?
