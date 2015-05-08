@@ -1,47 +1,32 @@
 import tempfile
-import logging
 from bin import create_migration
 import os
 import unittest
 import shutil
 from datetime import datetime
 
-logger = logging.getLogger("migrate")
-logger.setLevel(logging.DEBUG)
-console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.DEBUG)
-logger.addHandler(console_handler)
-
 VERSION_FORMAT = "%Y%m%d%H%M%S"
 MIGRATION_TEMPLATE = """
-from odo.migrations import migrations
+def up():
+    pass
 
 
-class Migration(migrations.MigrationBase):
-    def up(self, logger):
-        pass
-
-    def down(self, logger):
-        pass
+def down():
+    pass
 """
 
 MIGRATION_TEST_TEMPLATE = """
 \"\"\"(Write a doc string).\"\"\"
-import logging as logger
-
-from migrations.{0} import Migration
-
-from tests.helpers import database_connection
-from tests.helpers import factories
+import unittest
+from migrations import {0}
 
 
-class TestMigration(database_connection.MongoConnectionTestCase):
+class TestMigration(unittest.TestCase):
     def test_new_migration(self):
-        migration = Migration({1})
+        migration = {0}
 
-
-        migration.up(logger)
-        migration.down(logger)
+        migration.up()
+        migration.down()
 
         self.assertTrue(False, "Migration test has not been written yet.")
 """
@@ -59,16 +44,15 @@ class TestCreateMigrationFiles(unittest.TestCase):
         os.mkdir(base_dir + "/migrations")
         os.mkdir(base_dir + "/tests")
         os.mkdir(base_dir + "/tests/migrations")
-        create_migration._generate_migration(base_dir + "/migrations", description, logger)
+        create_migration._generate_migration(base_dir + "/migrations", description)
 
         self.assertTrue(os.path.exists(base_dir + "/migrations/" + base_name + ".py"))
         self.assertTrue(os.path.exists(base_dir + "/tests/migrations/test_" + base_name + ".py"))
         self.assertEqual(
             MIGRATION_TEMPLATE, open(base_dir + "/migrations/" + base_name + ".py", "r").read())
         self.assertEqual(
-            MIGRATION_TEST_TEMPLATE.format(base_name, version),
+            MIGRATION_TEST_TEMPLATE.format(base_name),
             open(base_dir + "/tests/migrations/test_" + base_name + ".py", "r").read()
         )
 
         shutil.rmtree(base_dir)
-
