@@ -6,7 +6,7 @@ Standalone Migration Tool a.k.a. "Odo"
 
 ### What is Odo?
 
-Odo will be an open source tool for running migration scripts.  It was developed in an effort to simplify database migrations at [uStudio](http://www.ustudio.com).
+Odo is an open source tool for running migration scripts.  It was developed in an effort to simplify database migrations at [uStudio](http://www.ustudio.com).
 
 
 =======
