@@ -1,6 +1,7 @@
-dependencies:
-  pre:
-    - pip install -r dev-requirements.txt
 machine:
   services:
     - cassandra
+
+dependencies:
+  pre:
+    - pip install -r dev-requirements.txt
