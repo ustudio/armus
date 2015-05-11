@@ -4,6 +4,9 @@ import os
 import unittest
 import shutil
 from datetime import datetime
+from mock import patch
+import optparse
+from collections import namedtuple
 
 VERSION_FORMAT = "%Y%m%d%H%M%S"
 MIGRATION_TEMPLATE = """
@@ -34,7 +37,8 @@ class TestMigration(unittest.TestCase):
 
 class TestCreateMigrationFiles(unittest.TestCase):
 
-    def test_create_migration_files(self):
+    @patch('optparse.OptionParser.parse_args')
+    def test_create_migration_files(self, mock_parse_args):
         description = "fake_description"
         version = datetime.today().strftime(VERSION_FORMAT)
 
@@ -44,7 +48,12 @@ class TestCreateMigrationFiles(unittest.TestCase):
         os.mkdir(base_dir + "/migrations")
         os.mkdir(base_dir + "/tests")
         os.mkdir(base_dir + "/tests/migrations")
-        create_migration._generate_migration(base_dir + "/migrations", description)
+
+        command_line_args = namedtuple('literal', 'path new_migration description')(
+            path=base_dir + "/migrations", new_migration=True, description=description)
+        mock_parse_args.return_value = (command_line_args, [])
+
+        create_migration.main()
 
         self.assertTrue(os.path.exists(base_dir + "/migrations/" + base_name + ".py"))
         self.assertTrue(os.path.exists(base_dir + "/tests/migrations/test_" + base_name + ".py"))
