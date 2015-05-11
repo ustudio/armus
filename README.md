@@ -1,3 +1,6 @@
+
+Build: [![Circle CI](https://circleci.com/gh/ustudio/migration_tool.svg?style=svg&circle-token=9f77bab2ae75ccdbefe30a7b0551a8fc52e53cac)](https://circleci.com/gh/ustudio/migration_tool)
+
 Standalone Migration Tool a.k.a. "Odo"
 =================
 
