@@ -1,6 +1,11 @@
 import os
 import re
 import importlib
+from exceptions import RuntimeError
+
+
+class MigrationError(RuntimeError):
+    pass
 
 
 migration_filter = re.compile(r"^migration_\d+.*\.py$")
@@ -33,7 +38,15 @@ def _run_migrations(path, migrations):
         module = _import_module(path, migration)
         module.up()
 
-# TODO revert_last_migration
+
+def revert_last_migration(path, migrations):
+    migration = sorted(migrations)[-1]
+    module = _import_module(path, migration)
+    try:
+        module.down()
+        return migration
+    except:
+        raise RuntimeError
 
 
 def apply_new_migrations(path, applied_migrations):
