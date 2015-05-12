@@ -43,12 +43,13 @@ class TestApplyNewMigrations(unittest.TestCase):
 
             mock_listdir.return_value = test_directory_listing
 
-            migrations_run = apply_new_migrations("this/is/some_path", applied_migrations)
+            migrations_run = apply_new_migrations("this/is/some_path", applied_migrations, test="test")
 
             mock_import_module.assert_called_with('some_path.migration_20121016182212_second_thing')
             self.assertEqual([
                 "migration_20121016182212_second_thing",
             ], migrations_run)
+            mock_import_module.return_value.up.assert_called_with({"test": "test"})
             self.assertEqual(1, mock_import_module.return_value.up.call_count)
 
         @patch('os.listdir')

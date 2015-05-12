@@ -33,10 +33,10 @@ def _import_module(path, module_name):
     return module
 
 
-def _run_migrations(path, migrations):
+def _run_migrations(path, migrations, **kwargs):
     for migration in migrations:
         module = _import_module(path, migration)
-        module.up()
+        module.up(kwargs)
 
 
 def revert_last_migration(path, migrations):
@@ -49,8 +49,9 @@ def revert_last_migration(path, migrations):
         raise RuntimeError
 
 
-def apply_new_migrations(path, applied_migrations):
+def apply_new_migrations(path, applied_migrations, **kwargs):
+    # path = args[0]
+    # applied_migrations = args[1]
     new_migrations = _find_unapplied_migrations(path, applied_migrations)
-    _run_migrations(path, new_migrations)
+    _run_migrations(path, new_migrations, **kwargs)
     return new_migrations
-
