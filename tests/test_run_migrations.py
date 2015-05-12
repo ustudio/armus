@@ -2,13 +2,13 @@ import unittest
 # import importlib
 from mock import patch, MagicMock
 
-from migration_tool.run_migrations import apply_new_migrations, revert_last_migration
+from odo.run_migrations import apply_new_migrations, revert_last_migration
 
 
 class TestApplyNewMigrations(unittest.TestCase):
 
         @patch('os.listdir')
-        @patch('migration_tool.run_migrations._import_module')
+        @patch('odo.run_migrations._import_module')
         def test_applies_all_new_migrations(self, mock_import_module, mock_listdir):
             # this list comes from the database
             some_module = MagicMock()
@@ -74,7 +74,7 @@ class TestApplyNewMigrations(unittest.TestCase):
             self.assertEqual(0, mock_import_module.return_value.up.call_count)
 
         @patch('os.listdir')
-        @patch('migration_tool.run_migrations._import_module')
+        @patch('odo.run_migrations._import_module')
         def test_reverts_most_recent_migration(self, mock_import_module, mock_listdir):
             some_module = MagicMock()
             pre_revert_migrations = [
