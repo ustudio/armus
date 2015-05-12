@@ -94,6 +94,7 @@ class TestApplyNewMigrations(unittest.TestCase):
             mock_listdir.return_value = test_directory_listing
             mock_import_module.return_value = some_module
 
-            reverted_migration = revert_last_migration("/this/is/some/path", pre_revert_migrations)
+            reverted_migration = revert_last_migration("/this/is/some/path", pre_revert_migrations, test="test")
 
+            mock_import_module.return_value.down.assert_called_with({"test": "test"})
             self.assertEqual(expected_migration, reverted_migration)

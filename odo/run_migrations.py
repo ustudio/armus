@@ -39,11 +39,11 @@ def _run_migrations(path, migrations, **kwargs):
         module.up(kwargs)
 
 
-def revert_last_migration(path, migrations):
+def revert_last_migration(path, migrations, **kwargs):
     migration = sorted(migrations)[-1]
     module = _import_module(path, migration)
     try:
-        module.down()
+        module.down(kwargs)
         return migration
     except:
         raise RuntimeError
