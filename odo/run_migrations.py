@@ -50,8 +50,6 @@ def revert_last_migration(path, migrations):
 
 
 def apply_new_migrations(path, applied_migrations, **kwargs):
-    # path = args[0]
-    # applied_migrations = args[1]
     new_migrations = _find_unapplied_migrations(path, applied_migrations)
     _run_migrations(path, new_migrations, **kwargs)
     return new_migrations
