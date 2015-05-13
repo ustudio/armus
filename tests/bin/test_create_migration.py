@@ -5,7 +5,6 @@ import unittest
 import shutil
 from datetime import datetime
 from mock import patch
-import optparse
 from collections import namedtuple
 
 VERSION_FORMAT = "%Y%m%d%H%M%S"
