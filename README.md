@@ -4,14 +4,14 @@
 Standalone Migration Tool a.k.a. "Odo"
 =================
 
-<img src="http://ds9.trekcore.com/gallery/albums/publicityphotos/odo/9O_2pub.jpg" width="150"
+<img src="http://vignette1.wikia.nocookie.net/memoryalpha/images/5/58/Armus.jpg/revision/latest?cb=20120728222622&path-prefix=en" width="150"
  alt="Odo logo" title="Odo" align="right" />
 
-### What is Odo?
+### What is Armus?
 
-Odo is an open source tool for running migration scripts.  It was developed in an effort to simplify database migrations at [uStudio](http://www.ustudio.com).  
-  
-  
+Odo is an open source tool for running migration scripts.  It was developed in an effort to simplify database migrations at [uStudio](http://www.ustudio.com).
+
+
 
 
 ## Usage
@@ -24,5 +24,3 @@ odo/run_migrations.py accepts a path to a package as well as a list of modules t
 2. Add a "revert" feature that will run the "down()" function on the specufied module
 3. Rename the repo to something more descriptive
 
-## Why "Odo"?
-As this tool was primarily developed for making changes to a database, we thought an homage to the greatest shapeshifter in starfleet was appropriate.
