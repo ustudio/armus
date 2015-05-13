@@ -39,7 +39,7 @@ def _run_migrations(path, migrations, **kwargs):
         module.up(kwargs)
 
 
-def revert_last_migration(path, migrations, **kwargs):
+def revert_last(path, migrations, **kwargs):
     migration = sorted(migrations)[-1]
     module = _import_module(path, migration)
     try:
@@ -49,7 +49,7 @@ def revert_last_migration(path, migrations, **kwargs):
         raise RuntimeError
 
 
-def apply_new_migrations(path, applied_migrations, **kwargs):
+def apply_new(path, applied_migrations, **kwargs):
     new_migrations = _find_unapplied_migrations(path, applied_migrations)
     _run_migrations(path, new_migrations, **kwargs)
     return new_migrations
