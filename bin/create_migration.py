@@ -57,11 +57,11 @@ def _generate_migration(path, description):
     test_path = os.path.abspath(os.path.join(path, '..', 'tests'))
     test_name = "{0}/migrations/test_{1}.py".format(test_path, base_name)
 
-    with open(name, "w") as file:
-        file.write(MIGRATION_TEMPLATE)
+    with open(name, "w") as migration_file:
+        migration_file.write(MIGRATION_TEMPLATE)
 
-    with open(test_name, "w") as file:
-        file.write(MIGRATION_TEST_TEMPLATE.format(base_name))
+    with open(test_name, "w") as migration_file:
+        migration_file.write(MIGRATION_TEST_TEMPLATE.format(base_name))
 
 
 if __name__ == "__main__":
