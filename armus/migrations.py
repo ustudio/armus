@@ -33,17 +33,17 @@ def _import_module(path, module_name):
     return module
 
 
-def _run_migrations(path, migrations, *args, **kwargs):
+def _run_migrations(path, migrations, **kwargs):
     for migration in migrations:
         module = _import_module(path, migration)
-        module.up(session=kwargs["session"])
+        module.up(**kwargs)
 
 
-def revert_last(path, migrations, *args, **kwargs):
+def revert_last(path, migrations, **kwargs):
     migration = sorted(migrations)[-1]
     module = _import_module(path, migration)
     try:
-        module.down(session=kwargs["session"])
+        module.down(**kwargs)
         return migration
     except:
         raise RuntimeError
