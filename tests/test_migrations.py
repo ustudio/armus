@@ -48,7 +48,7 @@ class TestApplyNewMigrations(unittest.TestCase):
             self.assertEqual([
                 "migration_20121016182212_second_thing",
             ], migrations_run)
-            mock_import_module.return_value.up.assert_called_with({"test": "test"})
+            mock_import_module.return_value.up.assert_called_with(test="test")
             self.assertEqual(1, mock_import_module.return_value.up.call_count)
 
         @patch('os.listdir')
@@ -95,5 +95,5 @@ class TestApplyNewMigrations(unittest.TestCase):
 
             reverted_migration = revert_last("/this/is/some/path", pre_revert_migrations, test="test")
 
-            mock_import_module.return_value.down.assert_called_with({"test": "test"})
+            mock_import_module.return_value.down.assert_called_with(test="test")
             self.assertEqual(expected_migration, reverted_migration)

@@ -12,6 +12,7 @@ migration_filter = re.compile(r"^migration_\d+.*\.py$")
 
 
 def _get_migration_versions(path):
+
     migration_files = [
         filename for filename in os.listdir(path) if migration_filter.match(filename)
     ]
@@ -21,9 +22,8 @@ def _get_migration_versions(path):
 def _find_unapplied_migrations(path, applied_migrations):
     all_migrations = _get_migration_versions(path)
     new_migrations = [
-        os.path.splitext(migration)[0] for migration in all_migrations if os.path.splitext(migration)[0] not in applied_migrations
+        os.path.splitext(migration)[0] for migration in all_migrations if migration not in applied_migrations
     ]
-
     return new_migrations
 
 
