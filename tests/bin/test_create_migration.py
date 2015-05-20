@@ -1,10 +1,10 @@
 import tempfile
-from bin import create_migration
+from armus.bin import create_migration
 import os
 import unittest
 import shutil
 from datetime import datetime
-from mock import patch
+from mock import call, patch
 from collections import namedtuple
 
 VERSION_FORMAT = "%Y%m%d%H%M%S"
@@ -64,3 +64,15 @@ class TestCreateMigrationFiles(unittest.TestCase):
         )
 
         shutil.rmtree(base_dir)
+
+    @patch('os.path.isdir')
+    @patch('os.mkdir')
+    def test_creates_folders(self, mock_mkdir, mock_isdir, ):
+        mock_isdir.return_value = False
+        create_migration._generate_migration("fake_path", "fake_description")
+
+        self.assertEqual(2, mock_mkdir.call_count)
+        mock_mkdir.assert_has_calls([
+            call("fake_path"),
+            call(os.path.abspath(os.path.join("tests", "fake_path")))
+        ], any_order=False)

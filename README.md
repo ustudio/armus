@@ -9,18 +9,38 @@ Standalone Migration Tool a.k.a. "Armus"
 
 ### What is Armus?
 
-armus is an open source tool for running migration scripts.  It was developed in an effort to simplify database migrations at [uStudio](http://www.ustudio.com).
+Armus is an open source tool for running migration scripts.  It was developed in an effort to simplify database migrations at [uStudio](http://www.ustudio.com).
 
 
 
+### Create Migration
 
-## Usage
+Armus includes a script to generate a migration module and associated test.
 
-armus/run_migrations.py accepts a path to a package as well as a list of modules that have already been applied.  It will compare the provided list to the migrations in the directory provided and run the ```up()``` function on the unapplied modules.
+#### Command Line Usage
+
+-p path to migrations *(defaults to "migrations")*
+
+-d description of migration i.e. add_field_to_user_table
+
+If the migration and testing directories do not exist they will be created for you.
+
+ex. ```python armus/bin/create_migration.py -d MIGRATION_DESCRIPTION ```
+
+### Apply migrations
+
+The migrations.py module handles executing your migration scripts.
+
+ex.
+```
+from armus import migrations
+
+migrations.apply_new(PATH_TO_MIGRATIONS_PACKAGE, LIST_OF_APPLIED_MIGRATIONS, **kwargs)
+
+```
+
+### Revert last
 
 ## TO DO
 
 1. Refactor and add features to the bin/create_migration.py script
-2. Add a "revert" feature that will run the "down()" function on the specufied module
-3. Rename the repo to something more descriptive
-
