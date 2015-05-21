@@ -36,8 +36,10 @@ class TestMigration(unittest.TestCase):
 
 class TestCreateMigrationFiles(unittest.TestCase):
 
+    @patch('os.path.isdir')
     @patch('optparse.OptionParser.parse_args')
-    def test_create_migration_files(self, mock_parse_args):
+    def test_create_migration_files(self, mock_parse_args, mock_isdir):
+        mock_isdir.return_value = True
         description = "fake_description"
         version = datetime.today().strftime(VERSION_FORMAT)
 
@@ -67,9 +69,9 @@ class TestCreateMigrationFiles(unittest.TestCase):
 
     @patch('os.path.isdir')
     @patch('os.mkdir')
-    def test_creates_folders(self, mock_mkdir, mock_isdir, ):
+    def test_creates_folders(self, mock_mkdir, mock_isdir):
         mock_isdir.return_value = False
-        create_migration._generate_migration("fake_path", "fake_description")
+        create_migration._generate_migration("fake_path", "fake_description", False)
 
         self.assertEqual(2, mock_mkdir.call_count)
         mock_mkdir.assert_has_calls([

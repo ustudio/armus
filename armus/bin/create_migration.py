@@ -38,15 +38,17 @@ def main():
         "-p", "--path", dest="path", default=DEFAULT_MIGRATION_PATH,
         help="Path to the migrations.")
     parser.add_option(
+        "-n", "--new-migration", dest="new_migration", default=False,
+        help="Create new migration and test file", action="store_true")
+    parser.add_option(
         "-d", "--description", dest="description", default="new_migration",
         help="Description of the migration to generate.")
     opts, args = parser.parse_args()
 
-    if opts.new_migration:
-        _generate_migration(opts.path, opts.description)
+    _generate_migration(opts.path, opts.description, opts.new_migration)
 
 
-def _generate_migration(path, description):
+def _generate_migration(path, description, new_migration):
 
     version = datetime.today().strftime("%Y%m%d%H%M%S")
     base_name = "migration_{0}_{1}".format(version, description.lower())
@@ -59,17 +61,16 @@ def _generate_migration(path, description):
         os.mkdir(os.path.join(path))
 
     if os.path.isdir(os.path.join(test_path, path)) == False:
-        print os.path.join(test_path, path)
         os.mkdir(os.path.join(test_path, path))
 
-    # with open(name, "w") as migration_file:
-    #     migration_file.write(MIGRATION_TEMPLATE)
+    if new_migration:
+        with open(name, "w") as migration_file:
+            migration_file.write(MIGRATION_TEMPLATE)
+            print " ".join(("Migration:\n", name, "created!"))
 
-    # print " ".join(("Migration:\n", name, "created!"))
-
-    # with open(test_name, "w") as migration_file:
-    #     migration_file.write(MIGRATION_TEST_TEMPLATE.format(base_name))
-    # print " ".join(("Test:\n", test_name, "created!"))
+        with open(test_name, "w") as migration_file:
+            migration_file.write(MIGRATION_TEST_TEMPLATE.format(base_name))
+            print " ".join(("Test:\n", test_name, "created!"))
 
 
 if __name__ == "__main__":
