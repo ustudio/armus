@@ -33,7 +33,7 @@ class TestApplyNewMigrations(unittest.TestCase):
         @patch('importlib.import_module')
         def test_applies_some_new_migrations(self, mock_import_module, mock_listdir):
             # this list comes from the database
-            applied_migrations = ["migration_20121016152357_first_thing.py"]
+            applied_migrations = ["migration_20121016152357_first_thing"]
             test_directory_listing = [
                 "migration_20121016182212_second_thing.py",
                 "migration_20121016152357_first_thing.py",
@@ -56,8 +56,8 @@ class TestApplyNewMigrations(unittest.TestCase):
         def test_applies_no_new_migrations(self, mock_import_module, mock_listdir):
             # this list comes from the database
             applied_migrations = [
-                "migration_20121016152357_first_thing.py",
-                "migration_20121016182212_second_thing.py",
+                "migration_20121016152357_first_thing",
+                "migration_20121016182212_second_thing",
             ]
             test_directory_listing = [
                 "migration_20121016182212_second_thing.py",
