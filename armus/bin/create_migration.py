@@ -1,4 +1,4 @@
-"""Perform data migrations."""
+"""Create migration and associated test file from template"""
 
 import optparse
 import os
