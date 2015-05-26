@@ -43,4 +43,4 @@ migrations.apply_new(PATH_TO_MIGRATIONS_PACKAGE, LIST_OF_APPLIED_MIGRATIONS, **k
 
 ## TO DO
 
-1. Refactor and add features to the bin/create_migration.py script
+1. Make create-migration an easily executable script (i.e. armus create-migration --params)
