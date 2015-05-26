@@ -30,7 +30,7 @@ def _find_unapplied_migrations(path, applied_migrations):
 
 def _import_module(path, module_name):
     package_name = os.path.basename(path)
-    module = importlib.import_module(".".join(package_name, module_name))
+    module = importlib.import_module(".".join((package_name, module_name)))
     return module
 
 
