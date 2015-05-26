@@ -1,3 +1,4 @@
+#!/usr/bin/python
 """Create migration and associated test file from template"""
 
 import optparse
