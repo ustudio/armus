@@ -1,7 +1,6 @@
 import os
 import re
 import importlib
-from exceptions import RuntimeError
 
 
 class MigrationError(RuntimeError):
@@ -14,7 +13,8 @@ migration_filter = re.compile(r"^migration_\d+.*\.py$")
 def _get_migration_versions(path):
 
     migration_files = [
-        filename for filename in os.listdir(path) if migration_filter.match(filename)
+        os.path.splitext(filename)[0] for filename in os.listdir(path)
+        if migration_filter.match(filename)
     ]
     return sorted(migration_files)
 
