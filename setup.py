@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
     name='armus',
     packages=['armus'],
-    scripts=['bin/create_migration'],
+    scripts=['bin/create_migration.py'],
     version='0.1',
     description='A tool for running migrations',
     author='uStudio',
