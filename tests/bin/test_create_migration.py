@@ -1,5 +1,5 @@
 import tempfile
-from armus.bin import create_migration
+from bin import create_migration
 import os
 import unittest
 import shutil
