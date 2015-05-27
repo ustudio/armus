@@ -1,89 +1,77 @@
-"""Perform data migrations."""
+#!/usr/bin/python
+"""Create migration and associated test file from template"""
 
-import logging
 import optparse
 import os
-from odo.utils import date
+from datetime import datetime
 
 DEFAULT_MIGRATION_PATH = "migrations"
-
+VERSION_FORMAT = "%Y%m%d%H%M%S"
 MIGRATION_TEMPLATE = """
-from odo.migrations import migrations
+def up():
+    pass
 
 
-class Migration(migrations.MigrationBase):
-    def up(self, logger):
-        pass
-
-    def down(self, logger):
-        pass
+def down():
+    pass
 """
 
 MIGRATION_TEST_TEMPLATE = """
 \"\"\"(Write a doc string).\"\"\"
-import logging as logger
-
-from migrations.%(migration_basename)s import Migration
-
-from tests.helpers import database_connection
-from tests.helpers import factories
+import unittest
+from migrations import {0}
 
 
-class TestMigration(database_connection.MongoConnectionTestCase):
+class TestMigration(unittest.TestCase):
     def test_new_migration(self):
-        migration = Migration(%(migration_version)s)
+        migration = {0}
 
-
-        migration.up(logger)
-        migration.down(logger)
+        migration.up()
+        migration.down()
 
         self.assertTrue(False, "Migration test has not been written yet.")
 """
 
 
 def main():
-    logger = logging.getLogger("migrate")
-    logger.setLevel(logging.DEBUG)
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.DEBUG)
-    logger.addHandler(console_handler)
-
     parser = optparse.OptionParser(description="Run data migrations.")
     parser.add_option(
         "-p", "--path", dest="path", default=DEFAULT_MIGRATION_PATH,
         help="Path to the migrations.")
     parser.add_option(
-        "-n", "--new-migration", action="store_true", dest="new_migration",
-        default=False, help="Generate a new migration file.")
+        "-n", "--new-migration", dest="new_migration", default=False,
+        help="Create new migration and test file", action="store_true")
     parser.add_option(
         "-d", "--description", dest="description", default="new_migration",
         help="Description of the migration to generate.")
     opts, args = parser.parse_args()
 
-    if opts.new_migration:
-        _generate_migration(opts.path, opts.description, logger)
+    _generate_migration(opts.path, opts.description, opts.new_migration)
 
 
-def _generate_migration(path, description, logger):
+def _generate_migration(path, description, new_migration):
 
-    version = date.make_timestamp()
-    base_name = "_{0}_{1}".format(version, description.lower())
+    version = datetime.today().strftime("%Y%m%d%H%M%S")
+    base_name = "migration_{0}_{1}".format(version, description.lower())
     name = "{0}/{1}.py".format(path, base_name)
     test_path = os.path.abspath(os.path.join(path, '..', 'tests'))
-    test_name = "{0}/migrations/test{1}.py".format(test_path, base_name)
 
-    logger.info("Generating new migration file ({0}).".format(name))
+    test_name = "{0}/migrations/test_{1}.py".format(test_path, base_name)
 
-    with open(name, "w") as file:
-        file.write(MIGRATION_TEMPLATE)
+    if os.path.isdir(os.path.join(path)) == False:
+        os.mkdir(os.path.join(path))
 
-    logger.info("Generating new migration test ({0}).".format(test_name))
+    if os.path.isdir(os.path.join(test_path, path)) == False:
+        os.mkdir(os.path.join(test_path, path))
 
-    with open(test_name, "w") as file:
-        file.write(MIGRATION_TEST_TEMPLATE % {
-            "migration_basename": base_name,
-            "migration_version": version
-        })
+    if new_migration:
+        with open(name, "w") as migration_file:
+            migration_file.write(MIGRATION_TEMPLATE)
+            print " ".join(("Migration:\n", name, "created!"))
+
+        with open(test_name, "w") as migration_file:
+            migration_file.write(MIGRATION_TEST_TEMPLATE.format(base_name))
+            print " ".join(("Test:\n", test_name, "created!"))
 
 
 if __name__ == "__main__":
