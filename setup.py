@@ -1,14 +1,15 @@
-from distutils.core import setup
+try:
+    from setuptools import setup
+except:
+    from distutils.core import setup
+
+
 setup(
     name='armus',
     packages=['armus'],
     scripts=['bin/create_migration.py'],
-    version='0.1',
+    version='0.2.0',
     description='A tool for running migrations',
     author='uStudio',
     author_email='dev@ustudio.com',
-    url='https://github.com/ustudio/armus',
-    download_url='https://github.com/ustudio/armus/archive/0.1.tar.gz',
-    keywords=[],
-    classifiers=[],
-)
+    url='https://github.com/ustudio/armus')
