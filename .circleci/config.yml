@@ -1,0 +1,20 @@
+version: 2
+jobs:
+  test:
+    docker:
+      - image: circleci/python:3.6
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: pip install tox
+
+      - run: tox
+
+workflows:
+  version: 2
+  test:
+    jobs:
+      - test
