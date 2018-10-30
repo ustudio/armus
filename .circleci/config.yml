@@ -63,12 +63,24 @@ jobs:
 
 workflows:
   version: 2
-  test:
+  test-and-publish:
     jobs:
-      - test-2.7
-      - test-3.5
-      - test-3.6
-      - test-3.7
+      - test-2.7:
+          filters:
+            tags:
+              only: /^.*/
+      - test-3.5:
+          filters:
+            tags:
+              only: /^.*/
+      - test-3.6:
+          filters:
+            tags:
+              only: /^.*/
+      - test-3.7:
+          filters:
+            tags:
+              only: /^.*/
       - publish:
           requires:
             - test-2.7
