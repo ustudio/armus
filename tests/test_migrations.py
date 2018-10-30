@@ -1,5 +1,9 @@
 import unittest
-from mock import patch, MagicMock
+
+try:
+    from unittest.mock import patch, MagicMock
+except ImportError:
+    from mock import patch, MagicMock
 
 from armus.migrations import apply_new, revert_last
 
@@ -93,7 +97,8 @@ class TestApplyNewMigrations(unittest.TestCase):
             mock_listdir.return_value = test_directory_listing
             mock_import_module.return_value = some_module
 
-            reverted_migration = revert_last("/this/is/some/path", pre_revert_migrations, test="test")
+            reverted_migration = revert_last(
+                "/this/is/some/path", pre_revert_migrations, test="test")
 
             mock_import_module.return_value.down.assert_called_with(test="test")
             self.assertEqual(expected_migration, reverted_migration)

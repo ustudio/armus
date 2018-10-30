@@ -4,6 +4,7 @@
 import optparse
 import os
 from datetime import datetime
+import logging
 
 DEFAULT_MIGRATION_PATH = "migrations"
 VERSION_FORMAT = "%Y%m%d%H%M%S"
@@ -34,6 +35,10 @@ class TestMigration(unittest.TestCase):
 
 
 def main():
+    logging.basicConfig(
+        format="%(asctime)s %(levelname)s:%(module)s:%(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S%z", level=logging.INFO)
+
     parser = optparse.OptionParser(description="Run data migrations.")
     parser.add_option(
         "-p", "--path", dest="path", default=DEFAULT_MIGRATION_PATH,
@@ -58,20 +63,20 @@ def _generate_migration(path, description, new_migration):
 
     test_name = "{0}/migrations/test_{1}.py".format(test_path, base_name)
 
-    if os.path.isdir(os.path.join(path)) == False:
+    if os.path.isdir(os.path.join(path)) is False:
         os.mkdir(os.path.join(path))
 
-    if os.path.isdir(os.path.join(test_path, path)) == False:
+    if os.path.isdir(os.path.join(test_path, path)) is False:
         os.mkdir(os.path.join(test_path, path))
 
     if new_migration:
         with open(name, "w") as migration_file:
             migration_file.write(MIGRATION_TEMPLATE)
-            print " ".join(("Migration:\n", name, "created!"))
+            logging.info(" ".join(("Migration:\n", name, "created!")))
 
         with open(test_name, "w") as migration_file:
             migration_file.write(MIGRATION_TEST_TEMPLATE.format(base_name))
-            print " ".join(("Test:\n", test_name, "created!"))
+            logging.info(" ".join(("Test:\n", test_name, "created!")))
 
 
 if __name__ == "__main__":

@@ -1,6 +1,30 @@
 version: 2
 jobs:
-  test:
+  test-2.7:
+    docker:
+      - image: circleci/python:2.7
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install tox
+
+      - run: tox -e py27
+  test-3.5:
+    docker:
+      - image: circleci/python:3.5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install tox
+
+      - run: tox -e py35
+  test-3.6:
     docker:
       - image: circleci/python:3.6
 
@@ -11,10 +35,25 @@ jobs:
 
       - run: sudo pip install tox
 
-      - run: tox
+      - run: tox -e py36
+  test-3.7:
+    docker:
+      - image: circleci/python:3.7
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install tox
+
+      - run: tox -e py37
 
 workflows:
   version: 2
   test:
     jobs:
-      - test
+      - test-2.7
+      - test-3.5
+      - test-3.6
+      - test-3.7
