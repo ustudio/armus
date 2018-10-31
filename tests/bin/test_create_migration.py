@@ -4,8 +4,13 @@ import os
 import unittest
 import shutil
 from datetime import datetime
-from mock import call, patch
 from collections import namedtuple
+import logging
+
+try:
+    from unittest.mock import call, patch
+except ImportError:
+    from mock import call, patch
 
 VERSION_FORMAT = "%Y%m%d%H%M%S"
 MIGRATION_TEMPLATE = """
@@ -36,9 +41,10 @@ class TestMigration(unittest.TestCase):
 
 class TestCreateMigrationFiles(unittest.TestCase):
 
-    @patch('os.path.isdir')
-    @patch('optparse.OptionParser.parse_args')
-    def test_create_migration_files(self, mock_parse_args, mock_isdir):
+    @patch("os.path.isdir")
+    @patch("optparse.OptionParser.parse_args")
+    @patch("logging.basicConfig")
+    def test_create_migration_files(self, mock_log_config, mock_parse_args, mock_isdir):
         mock_isdir.return_value = True
         description = "fake_description"
         version = datetime.today().strftime(VERSION_FORMAT)
@@ -55,6 +61,10 @@ class TestCreateMigrationFiles(unittest.TestCase):
         mock_parse_args.return_value = (command_line_args, [])
 
         create_migration.main()
+
+        mock_log_config.assert_called_once_with(
+            format="%(asctime)s %(levelname)s:%(module)s:%(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S%z", level=logging.INFO)
 
         self.assertTrue(os.path.exists(base_dir + "/migrations/" + base_name + ".py"))
         self.assertTrue(os.path.exists(base_dir + "/tests/migrations/test_" + base_name + ".py"))

@@ -1,0 +1,95 @@
+version: 2
+jobs:
+  test-2.7:
+    docker:
+      - image: circleci/python:2.7
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install tox
+
+      - run: tox -e py27
+  test-3.5:
+    docker:
+      - image: circleci/python:3.5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install tox
+
+      - run: tox -e py35
+  test-3.6:
+    docker:
+      - image: circleci/python:3.6
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install tox
+
+      - run: tox -e py36
+  test-3.7:
+    docker:
+      - image: circleci/python:3.7
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install tox
+
+      - run: tox -e py37
+  publish:
+    docker:
+      - image: circleci/python:3.6
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      - run: sudo pip install twine
+
+      - run: ./publish_to_pypi.sh
+
+workflows:
+  version: 2
+  test-and-publish:
+    jobs:
+      - test-2.7:
+          filters:
+            tags:
+              only: /.*/
+      - test-3.5:
+          filters:
+            tags:
+              only: /.*/
+      - test-3.6:
+          filters:
+            tags:
+              only: /.*/
+      - test-3.7:
+          filters:
+            tags:
+              only: /.*/
+      - publish:
+          requires:
+            - test-2.7
+            - test-3.5
+            - test-3.6
+            - test-3.7
+          filters:
+            tags:
+              only: /^v[0-9]+(\.[0-9]+)*/
+            branches:
+              ignore: /.*/
+          context: org-global
